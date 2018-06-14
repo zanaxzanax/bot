@@ -1,0 +1,59 @@
+{
+  "name": "huyax_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "build-old": "npm run copy && npm run copy-templates && tsc",
+    "copy": "cpx \"src/lang.json\" \"dist\"",
+    "copy-templates": "cpx \"src/server/templates/*.*\" \"dist/server/templates\"",
+    "test": "jest --coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.json"
+      }
+    },
+    "transform": {
+      "^.+\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "moduleNameMapper": {}
+  },
+  "devDependencies": {
+    "@types/jest": "^22.1.4",
+    "@types/lodash": "^4.14.104",
+    "@types/express": "^4.11.1",
+    "@types/mongoose": "^5.0.2",
+    "@types/node": "^9.4.6",
+    "@types/redis": "^2.8.6",
+    "@types/request": "^2.47.0",
+    "@types/request-promise-native": "^1.0.13",
+    "jest": "^22.4.2",
+    "telegram-typings": "^0.3.5-3",
+    "ts-jest": "^22.4.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "intel": "^1.2.0",
+    "moment": "^2.20.1",
+    "node-emoji": "^1.8.1",
+    "random-number-csprng": "^1.0.2",
+    "redis": "^2.8.0",
+    "redis-promisify": "^0.1.1",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5",
+    "telegraf": "^3.18.0"
+  }
+}

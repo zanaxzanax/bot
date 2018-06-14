@@ -1,0 +1,22 @@
+{
+  "chances": [
+    10,
+    20,
+    50
+  ],
+  "bets": [
+    10,
+    20,
+    50
+  ],
+  "adminUserInfo": {
+    "id": 0,
+    "nickname": "admin",
+    "first_name": "admin",
+    "last_name": "admin",
+    "language_code": "",
+    "balance": 0,
+    "is_bot": false,
+    "chat_id": 0
+  }
+}

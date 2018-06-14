@@ -1,0 +1,47 @@
+{
+  "back": {
+    "ru-RU": "Назад"
+  },
+  "settings": {
+    "ru-RU": "Настройки"
+  },
+  "play": {
+    "ru-RU": "Играть"
+  },
+  "help": {
+    "ru-RU": "Помощь"
+  },
+  "wallet": {
+    "ru-RU": "Кошелек"
+  },
+  "delete": {
+    "ru-RU": "Удалить"
+  },
+  "yes": {
+    "ru-RU": "Да"
+  },
+  "no": {
+    "ru-RU": "Нет"
+  },
+  "iHavePaid": {
+    "ru-RU": "Я заплатил"
+  },
+  "recheck": {
+    "ru-RU": "Перепроверить"
+  },
+  "replenishment": {
+    "ru-RU": "Пополнение"
+  },
+  "withdrawal": {
+    "ru-RU": "Вывод"
+  },
+  "prev": {
+    "ru-RU": "Назад"
+  },
+  "next": {
+    "ru-RU": "Вперед"
+  },
+  "history": {
+    "ru-RU": "История"
+  }
+}
