@@ -1,0 +1,30 @@
+{
+  "start": {
+    "update_id": 470703422,
+    "message": {
+      "message_id": 1199,
+      "from": {
+        "id": 214697709,
+        "is_bot": false,
+        "first_name": "Виктор",
+        "last_name": "Аннасхе",
+        "language_code": "ru-RU"
+      },
+      "chat": {
+        "id": 214697709,
+        "first_name": "Виктор",
+        "last_name": "Аннасхе",
+        "type": "private"
+      },
+      "date": 1529312388,
+      "text": "/start",
+      "entities": [
+        {
+          "offset": 0,
+          "length": 6,
+          "type": "bot_command"
+        }
+      ]
+    }
+  }
+}

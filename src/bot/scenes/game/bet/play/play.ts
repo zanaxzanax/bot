@@ -1,13 +1,12 @@
 import * as Scene from 'telegraf/scenes/base';
-import {Markup} from 'telegraf/markup'; import {Extra} from 'telegraf/markup';
+import {Markup} from 'telegraf/markup'; import {Extra} from 'telegraf/extra';
 import {CallbackQuery} from 'telegram-typings';
-import {UserInfo} from '../../../../../../models/index';
-import { Link} from '../../../../../../models/game/index';
 
 export const game_bet_play = new Scene('game:bet:play');
+
 game_bet_play.enter((ctx: Context) => {
 
-    const user: UserInfo = ctx.session.user;
+    const user: IUserInfo = ctx.session.user;
     const chance: number = ctx.scene.state.chance;
     const bet: number = ctx.scene.state.bet;
 
@@ -24,9 +23,11 @@ game_bet_play.enter((ctx: Context) => {
         ])
     );
 
-    return global.app.gameService.join(user, chance, bet).then((link: Link) => {
-        return ctx.reply(link.toString(), extra);
-    }, (err) => global.app.errorService.process.call(ctx, err, extra));
+    return ctx.app.gameService.joinPlayer(user, chance, bet)
+        .then(
+            (link: ILink) => ctx.reply(link.toString(), extra),
+            (err) => ctx.app.errorService.process.call(ctx, err, extra)
+        );
 });
 
 game_bet_play.on('callback_query', (ctx: Context) => {

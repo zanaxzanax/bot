@@ -5,15 +5,14 @@ interface IPaymentDoc {
     amount?: number;
     wallet_account: string;
     wallet_method: string;
-    created?: any;
+    created: number;
 }
 
 interface IPaymentModel {
     id: number;
     userId: number;
-    created: number;
     method: string;
-    wallet: IWalletModel;
+    created: any;
 }
 
 interface IWalletDescription {

@@ -17,3 +17,7 @@ interface IWithdrawalModel {
     userAccount: string;
     wallet: IWalletModel;
 }
+
+interface IWithdrawalService {
+    createWithdrawal(user_id: number, method: any, user_account: string, amount: number): Promise<IWithdrawalModel>;
+}

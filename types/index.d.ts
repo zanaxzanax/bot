@@ -18,7 +18,7 @@ interface GameServiceInterface {
 interface IQueue<T> {
     items: IQueueItem[];
 
-    push(func: (...args) => Promise<T>, ...args): Promise<T>
+    push: (func: (...args) => Promise<T>, ...args) => Promise<T>
 }
 
 declare namespace NodeJS {
@@ -35,6 +35,7 @@ interface IConfig {
     chances: number[];
     bets: number[];
     adminUserInfo: UserDocInterface;
+    wallets: IWalletDescription[]
 }
 
 interface IPaymentVariant {
@@ -104,6 +105,7 @@ interface IUserInfo {
     language_code: string;
     balance: number;
     toPlayerInfo: () => IPlayer;
+    toJSON: () => any;
     getName: () => string;
 }
 
@@ -112,9 +114,14 @@ interface Context {
     chat: any;
     from: any;
     reply: any;
-    scene: { state: any; enter: any; reenter: any; }
+    scene: {
+        state: any;
+        enter: any;
+        reenter: any;
+    };
     update: any;
     editMessageText: any;
+    app: IApp;
     lang: {
         backButtonText: string;
         playButtonText: string;
@@ -132,5 +139,5 @@ interface Context {
         nextButtonText: string;
         historyButtonText: string;
         [keys: string]: string
-    }
+    };
 }

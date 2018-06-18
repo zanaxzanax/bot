@@ -2,6 +2,13 @@ const exclusion: string[] = ['constructor', 'children', 'window', 'undefined'];
 const json: any = require('./lang.json');
 const DEFAULT_LANG: string = 'ru-RU';
 
+export const EMOJI: any = {
+    wallet: '💰',
+    back: '⬅️',
+    settings: '⚙️',
+    play: '🎲',
+};
+
 function translate(property: string, LANG: string): string {
     const fieldValue: any = json[property];
     return fieldValue[LANG] ? fieldValue[LANG] : fieldValue[DEFAULT_LANG] ? fieldValue[DEFAULT_LANG] : property;
@@ -15,15 +22,15 @@ const lang: any = (LANG: string) => {
             }
             switch (property) {
                 case 'backButtonText':
-                    return '⬅️' + ` ${translate('back', LANG)}`;
+                    return EMOJI.back + ` ${translate('back', LANG)}`;
                 case 'settingsButtonText':
-                    return '⚙️' + ` ${translate('settings', LANG)}`;
+                    return EMOJI.settings + ` ${translate('settings', LANG)}`;
                 case 'playButtonText':
-                    return '🎲' + ` ${translate('play', LANG)}`;
+                    return EMOJI.play + ` ${translate('play', LANG)}`;
                 case 'helpButtonText':
                     return 'ℹ️' + ` ${translate('help', LANG)}`;
                 case 'walletButtonText':
-                    return '💰' + ` ${translate('wallet', LANG)}`;
+                    return EMOJI.wallet + ` ${translate('wallet', LANG)}`;
                 case 'deleteButtonText':
                     return '🗑️' + ` ${translate('delete', LANG)}`;
                 case 'yesButtonText':
@@ -39,7 +46,7 @@ const lang: any = (LANG: string) => {
                 case 'withdrawalButtonText':
                     return '💸' + ` ${translate('withdrawal', LANG)}`;
                 case 'prevButtonText':
-                    return '⬅️' + ` ${translate('prev', LANG)}`;
+                    return EMOJI.back + ` ${translate('prev', LANG)}`;
                 case 'nextButtonText':
                     return '➡️' + ` ${translate('next', LANG)}`;
                 case 'historyButtonText':

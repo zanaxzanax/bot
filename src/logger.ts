@@ -1,4 +1,5 @@
 import * as intel from 'intel';
+import {Formatter} from 'intel';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as moment from 'moment';
@@ -14,6 +15,7 @@ if (!fs.existsSync(dir)) {
 }
 
 const fileHandler = new intel.handlers.File(path.resolve(process.cwd(), dir, `./${fileName}.log`));
+fileHandler.setFormatter(new Formatter(`[%(date)s] %(name)s.%(levelname)s: %(message)s`));
 
+log.addHandler(fileHandler);
 
-log.addHandler();

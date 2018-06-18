@@ -1,8 +1,16 @@
 import {EventEmitter} from 'events';
 import {Redis} from './redis';
-import {GameService, PaymentService, RandomService, RedisService} from './services';
-import {UserInfo} from './models';
-import {bot} from './bot';
+import {
+    ErrorService,
+    GameService,
+    PaymentService,
+    RandomService,
+    RedisService,
+    UtilsService,
+    WithdrawalService
+} from './services';
+import {Queue, UserInfo} from './models';
+import {Bot} from './bot';
 import {log} from './logger';
 
 const config: IConfig = require('./config/config.json');
@@ -14,8 +22,12 @@ export class App extends EventEmitter implements IApp {
     gameService: IGameService;
     randomService: IRandomService;
     paymentService: IPaymentService;
-    bot: any;
+    withdrawalService: IWithdrawalService;
+    errorService: IErrorService;
+    utilsService: IUtilsService;
+    bot: IBot;
     log: any;
+    queue: IQueue<ILink>;
 
     admin: IUserInfo;
 
@@ -23,42 +35,49 @@ export class App extends EventEmitter implements IApp {
 
     constructor() {
         super();
-        this.redis = new Redis();
+        this.queue = new Queue();
+        this.redis = new Redis(this);
         this.redisService = new RedisService(this);
         this.gameService = new GameService(this);
         this.randomService = new RandomService(this);
         this.paymentService = new PaymentService(this);
+        this.withdrawalService = new WithdrawalService(this);
+        this.errorService = new ErrorService(this);
+        this.utilsService = new UtilsService(this);
         this.admin = new UserInfo(config.adminUserInfo);
-        this.bot = bot;
+        this.bot = new Bot(this);
         this.log = log;
+        this._bindEvents();
     }
 
     start(): Promise<any> {
-        if (this._started) {
-            return Promise.resolve();
-        }
         return Promise.resolve()
             .then(() => this.redis.start())
             .then(() => this.redisService.saveUserInfo(this.admin))
             .then(() => this.redisService.checkInitLinks())
-            .then(() => this.bot.startPolling())
-            .then(() => this._bindEvents())
+            .then(() => this.bot.start())
+            .then(() => {
+                const old = this.bot.client.handleUpdates;
+                this.bot.client.handleUpdates = (updates) => {
+                    console.log(JSON.stringify(updates));
+                    return old.apply(this.bot.client, [updates]);
+                }
+            })
             .then(() => {
                 this._started = true;
-                this.log.info('asdasd');
-            });
+                this.log.info('started');
+            }, (err: any) => this.stop(err));
     }
 
-    stop(err: any): Promise<any> {
-        if (!this._started) {
-            return Promise.resolve();
-        }
+    stop(err?: any): Promise<any> {
         return Promise.resolve()
             .then(() => this.bot.stop())
             .then(() => this.redis.stop())
             .then(() => {
                 this._started = false;
-                this.log.error(err);
+                if (err) {
+                    this.log.error(err);
+                }
             });
     }
 
@@ -66,7 +85,11 @@ export class App extends EventEmitter implements IApp {
         return config;
     }
 
+    isStarted(): boolean {
+        return this._started;
+    }
+
     private _bindEvents(): void {
-        this.redis.on('error', (err) => this.stop(err));
+        this.on('error', (err) => this.stop(err));
     }
 }

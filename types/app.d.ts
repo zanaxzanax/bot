@@ -4,8 +4,6 @@ interface IRedis {
     start(): Promise<any>;
 
     stop(): Promise<any>;
-
-    on(event: string | symbol, listener: (...args: any[]) => void): this;
 }
 
 interface ILink {
@@ -29,6 +27,8 @@ interface ILink {
     toJSON(): LinkDocInterface;
 
     getPrevLink(): ILink;
+
+    toString(): string;
 }
 
 interface IApp {
@@ -37,13 +37,27 @@ interface IApp {
     gameService: IGameService;
     randomService: IRandomService;
     paymentService: IPaymentService;
+    withdrawalService: IWithdrawalService;
+    errorService: IErrorService;
+    utilsService: IUtilsService;
     bot: any;
     log: any;
     admin: IUserInfo;
+    queue: IQueue<ILink>;
 
     start(): Promise<any>;
 
     stop(err: any): Promise<any>;
 
-    getConfig(): IConfig
+    getConfig(): IConfig;
+
+    emit(event: string | symbol, ...args: any[]): boolean;
+}
+
+interface IBot {
+    client: any;
+
+    start(): Promise<any>;
+
+    stop(): Promise<any>;
 }

@@ -1,18 +1,14 @@
-import {App} from '../app';
-import {Queue} from '../models/utils';
 import {Link, linkStatuses} from '../models';
 import * as _ from 'lodash';
 
-export class GameService {
+export class GameService implements IGameService {
 
-    queue: IQueue<ILink>;
+    constructor(private  app: IApp) {
 
-    constructor(private  app: App) {
-        this.queue = new Queue();
     }
 
     joinPlayer(...args): Promise<ILink> {
-        return this.queue.push(this._joinPlayer.bind(this), ...args);
+        return this.app.queue.push(this._joinPlayer.bind(this), ...args);
     }
 
     createInitialLink(bet: number, chance: number): Promise<any> {

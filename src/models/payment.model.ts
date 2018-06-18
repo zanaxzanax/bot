@@ -1,18 +1,18 @@
+import {Moment} from "moment";
+import * as moment from "moment/moment";
 
 export class PaymentModel implements IPaymentModel {
 
     id: number;
     userId: number;
-    created: number;
     method: string;
-    wallet: IWalletModel;
+    created: Moment;
 
-    constructor(private doc: IPaymentDoc) {
+    constructor(private doc: IPaymentDoc, private wallet: IWalletModel) {
         this.id = doc.id;
         this.userId = doc.user_id;
-        this.created = Number(doc.created);
         this.method = doc.wallet_method;
-        this.wallet = global.app.paymentService.getWalletByAccount(doc.wallet_account);
+        this.created = moment.utc(doc.created);
     }
 
     getInstruction(): string {

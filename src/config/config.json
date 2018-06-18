@@ -18,5 +18,14 @@
     "balance": 0,
     "is_bot": false,
     "chat_id": 0
-  }
+  },
+  "wallets": [
+    {
+      "method": "qiwi",
+      "displayName": "QIWI",
+      "description": "Оплата через VISA QIWI WALLET",
+      "account": "79277075653",
+      "token": ""
+    }
+  ]
 }

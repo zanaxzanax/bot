@@ -1,18 +1,20 @@
 import {CallbackQuery} from 'telegram-typings';
 import * as Scene from 'telegraf/scenes/base';
-import {Markup} from 'telegraf/markup'; import {Extra} from 'telegraf/markup';
-import {CHANCES} from '../../../app';
+import {Markup} from 'telegraf/markup';
+import {Extra} from 'telegraf/extra';
 
 export const game = new Scene('game');
+
 game.enter((ctx: Context) => {
 
     const rows: string[] = [
         `Шанс:`
     ];
 
-    let chanceButtons: any[] = global.app.getConfig().chances.map((bet: number) => Markup.callbackButton(`${bet}%`, `${bet}`));
+    let chanceButtons: any[] = ctx.app.getConfig().chances
+        .map((bet: number) => Markup.callbackButton(`${bet}%`, `${bet}`));
 
-    chanceButtons = global.app.utilsService.chunkArray(chanceButtons, 2);
+    chanceButtons = ctx.app.utilsService.chunkArray(chanceButtons, 2);
 
     // TODO ограничить участие, если бабок мало
 

@@ -1,5 +1,4 @@
 import {UserInfo} from "../models";
-import {ContextMessageUpdate} from "telegraf";
 
 export class RedisService implements IRedisService {
 
@@ -20,7 +19,7 @@ export class RedisService implements IRedisService {
     }
 
 
-    saveUserFromContext(ctx: ContextMessageUpdate): Promise<IUserInfo> {
+    saveUserFromContext(ctx: Context): Promise<IUserInfo> {
 
         const chat: any = ctx.chat;
         const user: any = ctx.from;
@@ -30,6 +29,8 @@ export class RedisService implements IRedisService {
             ...user,
             chat_id: chatId
         });
+
+        ctx.session.user = userInfo;
 
         return this.app.redisService.saveUserInfo(userInfo);
     }

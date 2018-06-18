@@ -73,4 +73,17 @@ export class Link implements ILink {
         return this._prevLink;
     }
 
+    toString(): string {
+
+        const rows: string[] = [
+            `#${this.id}`,
+            `Шанс: ${this.chance}%`,
+            `Ставка: ${this.bet}`,
+            `Игроки:`,
+            `${this.players.map((player: IPlayer) => `${player.nickname || player.id}`).join('\n')}`
+        ];
+
+        return rows.join('\n');
+    }
+
 }

@@ -1,13 +1,9 @@
-import * as Scene from 'telegraf/scenes/base';
-import {Extra} from 'telegraf/extra';
-import {Markup} from 'telegraf/markup';
+import * as Markup from 'telegraf/markup';
+import * as Extra from 'telegraf/extra';
+import {SceneFabric} from '../scene-fabric';
 
-const settingsText: string = '⚙️' + ' Настройки';
-const walletText: string = '💰' + ' Кошелек';
-const playButtonText: string = '🎲' + ' Играть';
-const helpText: string = 'ℹ️' + ' Помощь';
+export const main: any = SceneFabric('main');
 
-export const main = new Scene('main');
 main.enter((ctx: Context) => {
 
     const markup = Extra.markup(
@@ -24,6 +20,7 @@ main.enter((ctx: Context) => {
     );
 
     const nickname: string = ctx.session.user.nickname;
+
     let welcomeText: string = 'Welcome';
     if (nickname) {
         welcomeText += `, ${nickname}`;
@@ -31,6 +28,3 @@ main.enter((ctx: Context) => {
     return ctx.reply(welcomeText, markup);
 });
 
-main.hears(walletText, (ctx) => ctx.scene.enter('wallet'));
-main.hears(settingsText, (ctx) => ctx.scene.enter('settings'));
-main.hears(playButtonText, (ctx) => ctx.scene.enter('game'));

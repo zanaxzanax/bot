@@ -1,28 +1,51 @@
-import {ContextMessageUpdate} from "telegraf";
-
 interface IPaymentService {
-    validWallets: IWalletModel[];
+    wallets: IWalletModel[];
+
     getPaymentVariants(): IPaymentVariant[];
+
     getWalletByAccount(account: string): IWalletModel;
+
     processPaymentReadyCheckResult(result: IPaymentReadyCheckResult,
                                    silent?: boolean): Promise<IPaymentReadyCheckResult>;
-    getWalletByMethod(method: any, all: boolean): IWalletModel;
+
+    getWalletByMethod(method: any): IWalletModel;
+
+    getUserPendingPaymentByMethod(user: IUserInfo): Promise<IPaymentModel>;
+
+    removePayment(user: IUserInfo): Promise<any>;
+
+    createPayment(user: IUserInfo, method: any): Promise<IPaymentModel>;
+
 }
 
 interface IRedisService {
     saveUserInfo(userInfo: IUserInfo): Promise<any>;
+
     checkInitLinks(): Promise<any>;
-    saveUserFromContext(ctx: ContextMessageUpdate): Promise<IUserInfo>;
+
+    saveUserFromContext(ctx: any): Promise<IUserInfo>;
 }
 
 interface IGameService {
     joinPlayer(...args): Promise<ILink>;
+
     createInitialLink(bet: number, chance: number): Promise<any>;
 }
 
 interface IRandomService {
     encrypt(text: string): string;
+
     decrypt(text: string): string;
+
     getLinkHash(chance: number): Promise<string>;
+
     getMD5(str: string): string;
+}
+
+interface IErrorService {
+    process(err: Error, extra?: any): any;
+}
+
+interface IUtilsService {
+    chunkArray(myArray, chunk_size): any[];
 }

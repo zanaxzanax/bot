@@ -1,7 +1,6 @@
 import {CallbackQuery} from 'telegram-typings';
 import * as Scene from 'telegraf/scenes/base';
-import {Markup} from 'telegraf/markup'; import {Extra} from 'telegraf/markup';
-import {BETS} from '../../../../app';
+import {Markup} from 'telegraf/markup'; import {Extra} from 'telegraf/extra';
 
 export const game_bet = new Scene('game:bet');
 game_bet.enter((ctx: Context) => {
@@ -13,9 +12,10 @@ game_bet.enter((ctx: Context) => {
         `Ставка:`
     ];
 
-    let betsButtons: any[] = BETS.map((bet: number) => Markup.callbackButton(`${bet} RUB`, `${bet}`));
+    let betsButtons: any[] = ctx.app.getConfig().bets
+        .map((bet: number) => Markup.callbackButton(`${bet} RUB`, `${bet}`));
 
-    betsButtons = global.app.utilsService.chunkArray(betsButtons, 2);
+    betsButtons = ctx.app.utilsService.chunkArray(betsButtons, 2);
 
     const extra = Extra.markup(
         Markup.inlineKeyboard([

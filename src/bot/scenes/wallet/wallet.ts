@@ -1,13 +1,15 @@
 import {CallbackQuery} from 'telegram-typings';
-import * as Scene from 'telegraf/scenes/base';
-import {Markup} from 'telegraf/markup';
-import {Extra} from 'telegraf/markup';
+import * as Markup from 'telegraf/markup';
+import * as Extra from 'telegraf/extra';
+import {SceneFabric} from '../../scene-fabric';
 
-export const wallet = new Scene('wallet');
+export const wallet = SceneFabric('wallet');
+
 wallet.enter((ctx: Context) => {
 
-    const rows: string[] = [];
-    rows.push(`Баланс: ${ctx.session.user.balance.toFixed(2)} RUB`);
+    const rows: string[] = [
+        `Баланс: ${ctx.session.user.balance.toFixed(2)} RUB`
+    ];
 
     const extra = Extra.markup(
         Markup.inlineKeyboard([
