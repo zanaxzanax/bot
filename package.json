@@ -39,6 +39,7 @@
     "@types/redis": "^2.8.6",
     "@types/request": "^2.47.0",
     "@types/request-promise-native": "^1.0.13",
+    "https-proxy-agent": "^2.2.1",
     "jest": "^22.4.2",
     "telegram-typings": "^0.3.5-3",
     "ts-jest": "^22.4.0",

@@ -1,8 +1,10 @@
 import {CallbackQuery} from 'telegram-typings';
 import * as Scene from 'telegraf/scenes/base';
-import {Markup} from 'telegraf/markup'; import {Extra} from 'telegraf/extra';
+import * as Markup from 'telegraf/markup';
+import * as Extra from 'telegraf/extra';
 
 export const game_bet = new Scene('game:bet');
+
 game_bet.enter((ctx: Context) => {
 
     const chance: number = ctx.scene.state.chance;

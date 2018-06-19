@@ -10,7 +10,7 @@ export class ErrorService {
         const context: Context = this as any;
         switch (err.name) {
             case 'ContextError':
-                return context.reply(err.message, extra);
+                return context.reply(context.lang[err.message], extra);
             default:
                 return context.reply('Error');
         }

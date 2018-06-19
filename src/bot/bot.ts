@@ -1,8 +1,8 @@
 import * as Stage from 'telegraf/stage';
 import {SCENES} from './scenes';
-import lang from '../lang/lang';
+import lang, {EMOJI} from '../lang/lang';
 import * as Telegraf from "telegraf/telegraf";
-import {EventEmitter} from "events";
+import {main} from "./scenes/main";
 
 // export const client = new Telegraf(process.env.BOT_TOKEN);
 
@@ -44,6 +44,15 @@ export class Bot implements IBot {
             this.client.use(stage.middleware());
 
             this.client.start((ctx: any) => ctx.scene.enter('main'));
+
+            this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.play) > -1,
+                (ctx) => ctx.scene.enter('game'));
+            this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.wallet) > -1,
+                (ctx) => ctx.scene.enter('wallet'));
+            this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.help) > -1,
+                (ctx) => ctx.scene.enter('game-wizard'));
+            // this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.settings) > -1,
+            //     (ctx) => ctx.scene.enter('settings'));
 
 
             (this.client as any).catch((err) => {

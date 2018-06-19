@@ -18,9 +18,14 @@ import {game, game_bet, game_bet_play} from './game';
 //     settings_wallets_add
 // } from './settings/index';
 
+import {superWizard} from './wizard'
+import {GameWizard} from './game-wizard'
+
 export const SCENES: any[] = [
     game, game_bet, game_bet_play,
      wallet,
+    superWizard,
+    GameWizard,
     // wallet_history,
     // wallet_payment,
     // wallet_payment_qiwi,

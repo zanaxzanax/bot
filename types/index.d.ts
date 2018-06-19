@@ -111,6 +111,7 @@ interface IUserInfo {
 
 interface Context {
     session: { user: IUserInfo };
+    wizard: any;
     chat: any;
     from: any;
     reply: any;

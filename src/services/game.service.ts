@@ -1,5 +1,6 @@
 import {Link, linkStatuses} from '../models';
 import * as _ from 'lodash';
+import {ContextError} from "../errors";
 
 export class GameService implements IGameService {
 
@@ -20,7 +21,7 @@ export class GameService implements IGameService {
 
     private _joinPlayer(userInfo: IUserInfo, bet: number, chance: number): Promise<ILink> {
         if (bet > userInfo.balance) {
-            return Promise.reject(new Error('low balance'));
+            return Promise.reject(new ContextError('low_balance'));
         }
         return Promise.resolve()
             .then(() => this._getLink(userInfo, bet, chance))

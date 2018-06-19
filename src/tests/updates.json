@@ -26,5 +26,26 @@
         }
       ]
     }
+  },
+  "game": {
+    "update_id": 470703433,
+    "message": {
+      "message_id": 1217,
+      "from": {
+        "id": 214697709,
+        "is_bot": false,
+        "first_name": "Виктор",
+        "last_name": "Аннасхе",
+        "language_code": "ru-RU"
+      },
+      "chat": {
+        "id": 214697709,
+        "first_name": "Виктор",
+        "last_name": "Аннасхе",
+        "type": "private"
+      },
+      "date": 1529391371,
+      "text": "🎲 Играть"
+    }
   }
 }

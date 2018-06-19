@@ -1,7 +1,7 @@
 import {CallbackQuery} from 'telegram-typings';
 import * as Scene from 'telegraf/scenes/base';
-import {Markup} from 'telegraf/markup';
-import {Extra} from 'telegraf/extra';
+import * as Markup from 'telegraf/markup';
+import * as Extra from 'telegraf/extra';
 
 export const game = new Scene('game');
 
@@ -15,8 +15,6 @@ game.enter((ctx: Context) => {
         .map((bet: number) => Markup.callbackButton(`${bet}%`, `${bet}`));
 
     chanceButtons = ctx.app.utilsService.chunkArray(chanceButtons, 2);
-
-    // TODO ограничить участие, если бабок мало
 
     const extra = Extra.markup(
         Markup.inlineKeyboard([

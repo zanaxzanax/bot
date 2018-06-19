@@ -1,8 +1,8 @@
 import * as Markup from 'telegraf/markup';
 import * as Extra from 'telegraf/extra';
-import {SceneFabric} from '../scene-fabric';
+import * as Scene from 'telegraf/scenes/base';
 
-export const main: any = SceneFabric('main');
+export const main: any = new Scene('main');
 
 main.enter((ctx: Context) => {
 

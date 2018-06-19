@@ -5,12 +5,25 @@ const DEFAULT_LANG: string = 'ru-RU';
 export const EMOJI: any = {
     wallet: '💰',
     back: '⬅️',
+    next: '➡️',
     settings: '⚙️',
     play: '🎲',
+    help: 'ℹ️',
+    delete: '🗑️',
+    yes: 'yes',
+    no: 'no',
+    ok: '👌️',
+    replenishment: '👛',
+    withdrawal: '💸',
+    history: '📇',
+    recheck: '🔄',
 };
 
 function translate(property: string, LANG: string): string {
     const fieldValue: any = json[property];
+    if (!fieldValue) {
+        return property;
+    }
     return fieldValue[LANG] ? fieldValue[LANG] : fieldValue[DEFAULT_LANG] ? fieldValue[DEFAULT_LANG] : property;
 }
 
@@ -28,29 +41,29 @@ const lang: any = (LANG: string) => {
                 case 'playButtonText':
                     return EMOJI.play + ` ${translate('play', LANG)}`;
                 case 'helpButtonText':
-                    return 'ℹ️' + ` ${translate('help', LANG)}`;
+                    return EMOJI.help + ` ${translate('help', LANG)}`;
                 case 'walletButtonText':
                     return EMOJI.wallet + ` ${translate('wallet', LANG)}`;
                 case 'deleteButtonText':
-                    return '🗑️' + ` ${translate('delete', LANG)}`;
+                    return EMOJI.delete + ` ${translate('delete', LANG)}`;
                 case 'yesButtonText':
-                    return '👍' + ` ${translate('yes', LANG)}`;
+                    return EMOJI.yes + ` ${translate('yes', LANG)}`;
                 case 'noButtonText':
-                    return '👎️' + ` ${translate('no', LANG)}`;
+                    return EMOJI.no + ` ${translate('no', LANG)}`;
                 case 'readyButtonText':
-                    return '👌️' + ` ${translate('iHavePaid', LANG)}`;
+                    return EMOJI.ok + ` ${translate('iHavePaid', LANG)}`;
                 case 'recheckButtonText':
-                    return '🔄' + ` ${translate('recheck', LANG)}`;
+                    return EMOJI.recheck + ` ${translate('recheck', LANG)}`;
                 case 'replenishmentButtonText':
-                    return '👛' + ` ${translate('replenishment', LANG)}`;
+                    return EMOJI.replenishment + ` ${translate('replenishment', LANG)}`;
                 case 'withdrawalButtonText':
-                    return '💸' + ` ${translate('withdrawal', LANG)}`;
+                    return EMOJI.withdrawal + ` ${translate('withdrawal', LANG)}`;
                 case 'prevButtonText':
                     return EMOJI.back + ` ${translate('prev', LANG)}`;
                 case 'nextButtonText':
-                    return '➡️' + ` ${translate('next', LANG)}`;
+                    return EMOJI.next + ` ${translate('next', LANG)}`;
                 case 'historyButtonText':
-                    return '📇' + ` ${translate('history', LANG)}`;
+                    return EMOJI.history + ` ${translate('history', LANG)}`;
                 default:
                     break
             }
