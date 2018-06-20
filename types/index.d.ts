@@ -119,6 +119,7 @@ interface Context {
         state: any;
         enter: any;
         reenter: any;
+        leave: any;
     };
     update: any;
     editMessageText: any;
