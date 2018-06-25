@@ -5,7 +5,7 @@ export class RedisService implements IRedisService {
     constructor(private  app: IApp) {
     }
 
-    saveUserInfo(userInfo: IUserInfo): Promise<any> {
+    saveUserInfo(userInfo: IUserInfo): Promise<IUserInfo> {
         return Promise.resolve()
             .then(() => this.app.redis.client.hgetallAsync(`users:${userInfo.id}`)
                 .then((user: string) => {
@@ -18,6 +18,10 @@ export class RedisService implements IRedisService {
                 }));
     }
 
+    saveUserField(userInfo: IUserInfo, field: string, value: string): Promise<IUserInfo> {
+         return this.app.redis.client.hsetAsync(`users:${userInfo.id}`, field, value)
+            .then(() => userInfo);
+    }
 
     saveUserFromContext(ctx: Context): Promise<IUserInfo> {
 

@@ -17,6 +17,8 @@ export const EMOJI: any = {
     withdrawal: '💸',
     history: '📇',
     recheck: '🔄',
+    change: '✏️',
+    nickname: '🎭',
 };
 
 function translate(property: string, LANG: string): string {
@@ -34,6 +36,10 @@ const lang: any = (LANG: string) => {
                 return;
             }
             switch (property) {
+                case 'nicknameButtonText':
+                    return EMOJI.nickname + ` ${translate('nickname', LANG)}`;
+                case 'changeButtonText':
+                    return EMOJI.change + ` ${translate('change', LANG)}`;
                 case 'backButtonText':
                     return EMOJI.back + ` ${translate('back', LANG)}`;
                 case 'settingsButtonText':

@@ -19,7 +19,8 @@ interface IPaymentService {
 }
 
 interface IRedisService {
-    saveUserInfo(userInfo: IUserInfo): Promise<any>;
+    saveUserInfo(userInfo: IUserInfo): Promise<IUserInfo>;
+    saveUserField(userInfo: IUserInfo, field: string, value: string): Promise<IUserInfo>;
 
     checkInitLinks(): Promise<any>;
 
@@ -48,4 +49,8 @@ interface IErrorService {
 
 interface IUtilsService {
     chunkArray(myArray, chunk_size): any[];
+
+    sanitize(text: string): string;
+
+    validate(pretend: string): string;
 }

@@ -51,8 +51,8 @@ export class Bot implements IBot {
                 (ctx) => ctx.scene.enter('wallet'));
             this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.help) > -1,
                 (ctx) => ctx.scene.enter('game-wizard'));
-            // this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.settings) > -1,
-            //     (ctx) => ctx.scene.enter('settings'));
+            this.client.hears((text: string, ctx: Context) => text.indexOf(EMOJI.settings) > -1,
+                (ctx) => ctx.scene.enter('settings'));
 
 
             (this.client as any).catch((err) => {

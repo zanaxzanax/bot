@@ -1,15 +1,9 @@
-import {
-    wallet,
-    // wallet_history,
-    // wallet_history_payment,
-    // wallet_payment,
-    // wallet_payment_qiwi,
-    // wallet_payment_remove,
-    // wallet_withdrawal,
-    // wallet_withdrawal_qiwi
-} from './wallet';
+import {wallet,} from './wallet';
 import {main} from './main';
 import {game, game_bet, game_bet_play} from './game';
+import {superWizard} from './wizard'
+import {GameWizard} from './game-wizard'
+import {settings, settings_nickname} from './settings'
 // import {
 //     settings,
 //     settings_nickname,
@@ -18,14 +12,12 @@ import {game, game_bet, game_bet_play} from './game';
 //     settings_wallets_add
 // } from './settings/index';
 
-import {superWizard} from './wizard'
-import {GameWizard} from './game-wizard'
-
 export const SCENES: any[] = [
     game, game_bet, game_bet_play,
-     wallet,
+    wallet,
     superWizard,
     GameWizard,
+    settings, settings_nickname,
     // wallet_history,
     // wallet_payment,
     // wallet_payment_qiwi,

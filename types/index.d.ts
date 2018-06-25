@@ -126,6 +126,7 @@ interface Context {
     app: IApp;
     lang: {
         backButtonText: string;
+        changeButtonText: string;
         playButtonText: string;
         settingsButtonText: string;
         helpButtonText: string;
