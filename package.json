@@ -50,6 +50,7 @@
     "debug": "^3.1.0",
     "intel": "^1.2.0",
     "moment": "^2.20.1",
+    "mongoose": "^5.1.7",
     "node-emoji": "^1.8.1",
     "random-number-csprng": "^1.0.2",
     "redis": "^2.8.0",

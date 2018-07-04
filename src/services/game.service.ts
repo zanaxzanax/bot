@@ -1,5 +1,5 @@
-import {Link, linkStatuses} from '../models';
-import * as _ from 'lodash';
+import {ELEMENT_STATUS, ElementModel} from "../models/element.model";
+import {IElementDoc} from "../mongo/schemes";
 import {ContextError} from "../errors";
 
 export class GameService implements IGameService {
@@ -8,106 +8,140 @@ export class GameService implements IGameService {
 
     }
 
-    joinPlayer(...args): Promise<ILink> {
-        return this.app.queue.push(this._joinPlayer.bind(this), ...args);
-    }
-
-    createInitialLink(bet: number, chance: number): Promise<any> {
-        return this._createLink(this.app.admin, bet, chance, null, {
-            status: linkStatuses.done,
-            loser: this.app.admin.toPlayerInfo()
-        });
-    }
-
-    private _joinPlayer(userInfo: IUserInfo, bet: number, chance: number): Promise<ILink> {
-        if (bet > userInfo.balance) {
-            return Promise.reject(new ContextError('low_balance'));
-        }
+    test(userInfo: IUserInfo, bet: number, chance: number): Promise<IElement[]> {
+        const limit: number = 2;
         return Promise.resolve()
-            .then(() => this._getLink(userInfo, bet, chance))
-            .then((link: ILink) => {
-                link.join(userInfo.toPlayerInfo());
-                const multi = this.app.redis.client.multi();
-                if (link.isDone()) {
-                    userInfo.balance -= bet;
-                    if (link.isShortLink()) {
-                        const prevLink: ILink = link.getPrevLink();
-                        multi.hset(`users:${userInfo.id}`, `balance`, String(userInfo.balance))
-                            .hincrby(`users:${prevLink.loser.id}`, `balance`, bet);
-                    } else {
-                        link.players.forEach((player: IPlayer) => {
-                            if (player.id === userInfo.id) {
-                                multi.hset(`users:${userInfo.id}`, `balance`, userInfo.balance as any)
-                            } else {
-                                multi.hincrby(`users:${player.id}`, `balance`, bet / (link.players.length - 1))
-                            }
-                        });
-                    }
-                }
-                return multi.lset(`links:${bet}:${chance}`, 0, JSON.stringify(link))
-                    .execAsync().then(() => link);
-            });
-    }
-
-    private _buildLink(curLinkJSON: LinkDocInterface, prevLink: ILink): ILink {
-        const result: ILink = new Link(curLinkJSON);
-        if (prevLink) {
-            result.prevLink = prevLink;
-            result.loserPosition = this._getLinkLoserPosition(prevLink.hash);
-        }
-        return result;
-    }
-
-    private _getLink(userInfo: IUserInfo, bet: number, chance: number): Promise<ILink> {
-        return Promise.resolve()
-            .then(() => this.app.redis.client.lrangeAsync(`links:${bet}:${chance}`, 0, 1))
-            .then((results: any) => {
-                const lastLink: ILink = results.length === 2 ?
-                    this._buildLink(JSON.parse(results[0]), this._buildLink(JSON.parse(results[1]), null)) :
-                    this._buildLink(JSON.parse(results[0]), null);
-                if (lastLink.isDone()) {
-                    return this._createLink(userInfo, bet, chance, lastLink);
-                } else {
-                    return lastLink;
-                }
-            });
-    }
-
-    private _createLink(userInfo: IUserInfo, bet: number, chance: number, prevLink: ILink, options?: any): Promise<ILink> {
-        return Promise.all([
-            this.app.redis.client.incrAsync('links:id'),
-            this.app.randomService.getLinkHash(chance),
-        ]).then((results: any[]) => {
-
-            const id: number = results[0];
-            const hash: string = results[1];
-
-            const md5: string = this.app.randomService.getMD5(hash);
-            const encryptedHash: string = this.app.randomService.encrypt(hash);
-            const status: string = linkStatuses.pending;
-
-            const link: ILink = this._buildLink(_.extend(
-                {
-                    id,
-                    hash: encryptedHash,
+            .then(() => this.app.mongoService.getDocs('element', {
+                $or: [{
                     bet,
                     chance,
-                    md5,
-                    status,
-                    players: [userInfo.toPlayerInfo()]
-                },
-                options
-            ), prevLink);
+                    status: ELEMENT_STATUS.pending,
+                    taken: {$lt: this._getLimitedDate()},
+                    players: {$elemMatch: {id: {$ne: userInfo.id}}}
+                }, {
+                    bet,
+                    chance,
+                    status: ELEMENT_STATUS.pending,
+                    taken: {$lt: this._getLimitedDate()},
+                    players: {$size: 0}
+                }]
+            }, limit))
+            .then((docs: IElementDoc[]) => {
+                console.log('docs.length', docs.length);
+                docs.forEach((doc) => {
+                    doc.taken = Date.now();
+                });
+                return Promise.all(docs.map(doc => doc.save()));
+            })
+            .then((docs: IElementDoc[]) => {
+                const elements: IElement[] = docs.map((doc: IElementDoc) => new ElementModel(doc));
+                let promise: Promise<IElement[]> = Promise.resolve([]);
+                for (let i = 0; i < limit; i++) {
+                    promise = promise.then((result) => {
+                        if (elements[i]) {
+                            result.push(elements[i]);
+                            return result;
+                        } else {
+                            return this._createElement(bet, chance).then((element: IElement) => {
+                                result.push(element);
+                                return result;
+                            });
+                        }
+                    });
+                }
+                return promise;
+            });
+    }
 
-            return this.app.redis.client
-                .lpushAsync(`links:${bet}:${chance}`, JSON.stringify(link))
-                .then(() => link);
+    join(userInfo: IUserInfo, id: number): Promise<IElement> {
+        return this.app.mongoService.getDoc('element', {
+            id
+        }).then((doc: IElementDoc) => {
+
+            if (!doc) {
+                throw new ContextError('not found');
+            }
+
+            const element: IElement = new ElementModel(doc);
+            if (!element.isPending()) {
+                throw new ContextError('not pending');
+            }
+
+            console.log(userInfo);
+
+            element.join(userInfo.toPlayerInfo());
+
+            let promise: Promise<any>;
+            let result: Promise<any> = this.app.mongoService.updateDoc('element', {id: element.id}, element);
+
+            if (element.isDone()) {
+
+                userInfo.balance -= element.bet;
+
+                if (element.isShortLink()) {
+                    promise = Promise.resolve()
+                        .then(() => this._getLastResolved(element.bet, element.chance))
+                        .then((element: ElementModel) =>
+                            this.app.mongoService.updateDoc('user', {id: element.loser.id},
+                                {balance: {$inc: element.bet}}));
+
+                } else {
+                    const ids: number [] = element.players.map((player: IPlayer) => player.id)
+                        .filter((id: number) => id !== userInfo.id);
+                    promise = this.app.mongoService.updateDocs('user', {id: {$in: ids}}, {
+                        balance: {$inc: element.bet / (element.players.length - 1)}
+                    });
+                }
+                result = Promise.all([
+                    this.app.mongoService.updateDoc('user', {id: userInfo.id}, {balance: userInfo.balance}),
+                    promise,
+                    result
+                ]);
+            }
+
+            return result.then(() => element);
         });
     }
 
-    private _getLinkLoserPosition(encryptedHash: string): number {
-        const regExp: RegExp = /\[(\d+)\]/;
-        const decryptedHash: string = this.app.randomService.decrypt(encryptedHash);
-        return Number(regExp.exec(decryptedHash)[1]);
+    private _getLastResolved(bet: number, chance: number): Promise<IElement> {
+        return this.app.mongoService.getDoc('element', {
+            bet,
+            chance,
+            status: ELEMENT_STATUS.done,
+            //players: {$elemMatch: {id: {$ne: userInfo.id}}}
+        }, {
+            sort: {
+                created: -1
+            }
+        }).then((doc: IElementDoc) => doc ? new ElementModel(doc) : null);
+    }
+
+    private _createElement(bet: number, chance: number): Promise<IElement> {
+        return Promise.resolve()
+            .then(() => this.app.mongoService.getNextId('element'))
+            .then((id: number) => {
+
+                return this.app.randomService.getLinkHash(id, chance).then((hash: string) => {
+
+                    const md5: string = this.app.randomService.getMD5(hash);
+                    const encryptedHash: string = this.app.randomService.encrypt(hash);
+                    const status: string = ELEMENT_STATUS.pending;
+
+                    return this.app.mongoService.updateDoc('element', {id}, {
+                        id,
+                        bet,
+                        chance,
+                        md5,
+                        status,
+                        hash/*: encryptedHash*/,
+                        players: []
+                    }).then((elementDoc: IElementDoc) => new ElementModel(elementDoc));
+                });
+            });
+    }
+
+    private _getLimitedDate(): number {
+        console.log(Date.now() - 60000);
+        return Date.now() - 60000;
     }
 }

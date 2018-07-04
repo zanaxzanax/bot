@@ -5,3 +5,5 @@ export * from './payment.service';
 export * from './withdrawal.service';
 export * from './error.service';
 export * from './utils.service';
+export * from './mongo.service';
+export * from './test.service';

@@ -1,5 +1,5 @@
 
-export class UtilsService {
+export class UtilsService implements IUtilsService {
 
     constructor(private app: IApp) {
 

@@ -31,4 +31,3 @@ settings.on('callback_query', (ctx) => {
             break
     }
 });
-

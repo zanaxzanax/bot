@@ -34,8 +34,9 @@ interface Message {
 interface IConfig {
     chances: number[];
     bets: number[];
-    adminUserInfo: UserDocInterface;
-    wallets: IWalletDescription[]
+    adminUserInfo: any;
+    wallets: IWalletDescription[];
+    MONGO_URL: string;
 }
 
 interface IPaymentVariant {
@@ -85,17 +86,16 @@ interface LinkDocInterface {
     loser?: IPlayer;
 }
 
-
-interface UserDocInterface {
-    id: string;
-    is_bot: string;
-    first_name: string;
-    last_name: string;
-    language_code: string;
-    chat_id: string;
-    balance: string;
-    nickname: string;
-}
+//
+// interface IUserDoc {
+//     id: number;
+//     is_bot: boolean;
+//     first_name: string;
+//     last_name: string;
+//     language_code: string;
+//     balance: number;
+//     nickname: string;
+// }
 
 interface IUserInfo {
     id: number;
@@ -105,7 +105,7 @@ interface IUserInfo {
     language_code: string;
     balance: number;
     toPlayerInfo: () => IPlayer;
-    toJSON: () => any;
+    // toJSON: () => any;
     getName: () => string;
 }
 

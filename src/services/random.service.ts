@@ -29,17 +29,16 @@ export class RandomService implements IRandomService {
         return Buffer.concat([decipher.update(encryptedText), decipher.final()]).toString('utf-8');
     }
 
-    getLinkHash(chance: number): Promise<string> {
+    getLinkHash(id: number, chance: number): Promise<string> {
         return Promise.resolve()
-            .then(() => Promise.all([randomNumber(0, ((100 / chance) - 1 || 1)), randomNumber(0, HASH_LENGTH)]))
-            .then((result: number[]) => new Promise((resolve: any, reject: any) => {
+            .then(() => randomNumber(0, ((100 / chance) - 1 || 1)))
+            .then((result: number) => new Promise((resolve: any, reject: any) => {
                 crypto.randomBytes(HASH_LENGTH, (err, buf) => {
                     if (err) {
                         reject(err);
                     } else {
-                        let hex: string = buf.toString('hex');
-                        hex = hex.slice(0, result[1]) + `[${result[0]}]` + hex.slice(result[1]);
-                        resolve(hex);
+                        const hex: string = buf.toString('hex');
+                        resolve(`${id}[${result}]${hex}`);
                     }
                 });
             }) as Promise<string>);

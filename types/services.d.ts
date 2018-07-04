@@ -20,6 +20,7 @@ interface IPaymentService {
 
 interface IRedisService {
     saveUserInfo(userInfo: IUserInfo): Promise<IUserInfo>;
+
     saveUserField(userInfo: IUserInfo, field: string, value: string): Promise<IUserInfo>;
 
     checkInitLinks(): Promise<any>;
@@ -27,10 +28,30 @@ interface IRedisService {
     saveUserFromContext(ctx: any): Promise<IUserInfo>;
 }
 
-interface IGameService {
-    joinPlayer(...args): Promise<ILink>;
+//
+// interface IGameService {
+//     joinPlayer(...args): Promise<ILink>;
+//
+//     createInitialLink(bet: number, chance: number): Promise<any>;
+// }
 
-    createInitialLink(bet: number, chance: number): Promise<any>;
+interface IGameService {
+    test(userInfo: IUserInfo, bet: number, chance: number): Promise<IElement[]>;
+
+    join(userInfo: IUserInfo, id: number): Promise<IElement>;
+}
+
+interface IMongoService {
+
+    updateDoc(modelName: string, conditions: any, options: any): Promise<any>;
+
+    updateDocs(modelName: string, conditions: any, options: any): Promise<any[]>;
+
+    getNextId(modelName: string): Promise<number>;
+
+    getDocs(modelName: string, options: any, limit?: number): Promise<any[]>;
+
+    getDoc(modelName: string, options: any, projection?: any): Promise<any>;
 }
 
 interface IRandomService {
@@ -38,7 +59,7 @@ interface IRandomService {
 
     decrypt(text: string): string;
 
-    getLinkHash(chance: number): Promise<string>;
+    getLinkHash(id: number, chance: number): Promise<string>;
 
     getMD5(str: string): string;
 }
@@ -53,4 +74,8 @@ interface IUtilsService {
     sanitize(text: string): string;
 
     validate(pretend: string): string;
+}
+
+interface ITestService {
+    getFakeUserInfo(balance: number, id?: number): Promise<IUserInfo>;
 }
